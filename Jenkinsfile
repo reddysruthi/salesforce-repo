@@ -11,7 +11,7 @@ node {
     def JWT_KEY_CRED_ID = env.JWT_CRED_ID_DH
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
 
-    def toolbelt = tool name: 'Custom Tools', type: 'Command'
+    def toolbelt = tool 'toolbelt'
 
 
     stage('checkout source') {
