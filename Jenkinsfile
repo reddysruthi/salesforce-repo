@@ -17,7 +17,7 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
 
     // Define the tool name as configured in "Global Tool Configuration"
-    def toolbelt = tool name: 'toolbelt', type: 'Tool'
+    def toolbelt = tool 'toolbelt'
 
     stage('checkout source') {
         steps {
