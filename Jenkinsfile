@@ -18,22 +18,6 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
 
-    // Define Salesforce CLI installation directory
-    def sfdxInstallationDir = '/home/ubuntu/node-v18.18.0-linux-x64/bin/sfdx'  // Replace with the actual path
-
-    // Ensure Salesforce CLI is in the PATH
-    env.PATH = "${sfdxInstallationDir}:${env.PATH}"
-
-    // Install Salesforce CLI if not already installed
-    def sfdxInstalled = isUnix() ? sh(script: 'command -v sfdx', returnStatus: true) : bat(script: 'where sfdx', returnStatus: true)
-
-    if (sfdxInstalled != 0) {
-        echo 'Salesforce CLI not found. Installing...'
-        // You can add the installation steps here.
-        // For example, downloading the Salesforce CLI binary and extracting it.
-        // Ensure Salesforce CLI is in the PATH after installation.
-    }
-
     stage('checkout source') {
         // when running in a multi-branch job, one must issue this command
         checkout scm
