@@ -12,11 +12,11 @@ node {
     def JWT_KEY_CRED_ID='66a3ee6c-af85-482a-a322-e7ecd0149c0d'
     def CONNECTED_APP_CONSUMER_KEY='3MVG9fe4g9fhX0E4fUVa.JhS5PvbUrVzUAXwY71jOhg9qjDjJ5zfwzFPbfA72C.YJ3nHtR5yKRRiu0WhbkZkJ'
 
-    println 'KEY IS'
-    println JWT_KEY_CRED_ID
-    println HUB_ORG
-    println SFDC_HOST
-    println CONNECTED_APP_CONSUMER_KEY
+    echo 'KEY IS' // Use echo to print messages
+    echo JWT_KEY_CRED_ID
+    echo HUB_ORG
+    echo SFDC_HOST
+    echo CONNECTED_APP_CONSUMER_KEY
 
     stage('checkout source') {
         // when running in a multi-branch job, one must issue this command
@@ -48,3 +48,4 @@ node {
         }
     }
 }
+
