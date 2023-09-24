@@ -3,95 +3,64 @@
 import groovy.json.JsonSlurperClassic
 
 node {
-
- 
-
-    def BUILD_NUMBER=env.BUILD_NUMBER
-
-    def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
-
+    def BUILD_NUMBER = env.BUILD_NUMBER
+    def RUN_ARTIFACT_DIR = "tests/${BUILD_NUMBER}"
     def SFDC_USERNAME
 
- 
-
-    def HUB_ORG='kondagari@sruthi.reddy'
-
-    def SFDC_HOST='https://login.salesforce.com'
-
-    def JWT_KEY_CRED_ID='367ebd75-2917-4f58-ab05-d3d9646aba7d'
-
-    def CONNECTED_APP_CONSUMER_KEY='3MVG9fe4g9fhX0E4fUVa.JhS5Pp1S3LIapUNMfKX.GlMmgKksUXIeVs6E1_pRRMOhRuaQCekr2xPWYxdx_YSt'
-
- 
+    def HUB_ORG = 'kondagari@sruthi.reddy'
+    def SFDC_HOST = 'https://login.salesforce.com'
+    def JWT_KEY_CRED_ID = '367ebd75-2917-4f58-ab05-d3d9646aba7d'
+    def CONNECTED_APP_CONSUMER_KEY = '3MVG9fe4g9fhX0E4fUVa.JhS5Pp1S3LIapUNMfKX.GlMmgKksUXIeVs6E1_pRRMOhRuaQCekr2xPWYxdx_YSt'
 
     println 'KEY IS'
-
     println JWT_KEY_CRED_ID
-
     println HUB_ORG
-
     println SFDC_HOST
-
     println CONNECTED_APP_CONSUMER_KEY
 
-    //def toolbelt = tool 'toolbelt'
+    // Define Salesforce CLI installation directory
+    def sfdxInstallationDir = '/home/ubuntu/node-v18.18.0-linux-x64/bin/sfdx'  // Replace with the actual path
 
- 
+    // Ensure Salesforce CLI is in the PATH
+    env.PATH = "${sfdxInstallationDir}:${env.PATH}"
+
+    // Install Salesforce CLI if not already installed
+    def sfdxInstalled = isUnix() ? sh(script: 'command -v sfdx', returnStatus: true) : bat(script: 'where sfdx', returnStatus: true)
+
+    if (sfdxInstalled != 0) {
+        echo 'Salesforce CLI not found. Installing...'
+        // You can add the installation steps here.
+        // For example, downloading the Salesforce CLI binary and extracting it.
+        // Ensure Salesforce CLI is in the PATH after installation.
+    }
 
     stage('checkout source') {
-
-        // when running in multi-branch job, one must issue this command
-
+        // when running in a multi-branch job, one must issue this command
         checkout scm
-
     }
-
- 
 
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
-
-        stage('Deploye Code') {
-
+        stage('Deploy Code') {
             if (isUnix()) {
-
                 rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-
-            }else{
-
+            } else {
                 rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-
             }
+            if (rc != 0) { error 'Hub org authorization failed' }
 
-            if (rc != 0) { error 'hub org authorization failed' }
+            echo rc
 
- 
-
-            println rc
-
-           
-
-            // need to pull out assigned username
-
+            // Need to pull out assigned username
             if (isUnix()) {
-
                 rmsg = sh returnStdout: true, script: "sfdx force:source:deploy --manifest manifest/package.xml -u ${HUB_ORG}"
-
-            }else{
-
-               rmsg = bat returnStdout: true, script: "sfdx force:source:deploy --manifest manifest/package.xml -u ${HUB_ORG}"
-
+            } else {
+                rmsg = bat returnStdout: true, script: "sfdx force:source:deploy --manifest manifest/package.xml -u ${HUB_ORG}"
             }
 
-             
+            echo rmsg
 
-            printf rmsg
-
-            println('Hello from a Job DSL script!')
-
-            println(rmsg)
-
+            echo('Hello from a Job DSL script!')
+            echo(rmsg)
         }
-
     }
-
 }
