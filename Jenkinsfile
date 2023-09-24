@@ -4,12 +4,12 @@ import groovy.json.JsonSlurperClassic
 
 node {
     def BUILD_NUMBER = env.BUILD_NUMBER
-    def RUN_ARTIFACT_DIR = "tests/${BUILD_NUMBER}"
+    def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
     def SFDC_USERNAME
 
-    def HUB_ORG = 'kondagari@sruthi.reddy'
-    def SFDC_HOST = 'https://login.salesforce.com'
-    def JWT_KEY_CRED_ID = '66a3ee6c-af85-482a-a322-e7ecd0149c0d'
+    def HUB_ORG='kondagari@sruthi.reddy'
+    def SFDC_HOST='https://login.salesforce.com'
+    def JWT_KEY_CRED_ID='66a3ee6c-af85-482a-a322-e7ecd0149c0d'
     def CONNECTED_APP_CONSUMER_KEY = '3MVG9fe4g9fhX0E4fUVa.JhS5PvbUrVzUAXwY71jOhg9qjDjJ5zfwzFPbfA72C.YJ3nHtR5yKRRiu0WhbkZkJ'
 
     println 'KEY IS'
