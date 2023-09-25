@@ -105,4 +105,50 @@ node {
 
 		}
 
+ 
+
+ 
+
+		// -------------------------------------------------------------------------
+
+		// Example shows how to run a check-only deploy.
+
+		// -------------------------------------------------------------------------
+
+ 
+
+		//stage('Check Only Deploy') {
+
+		//    rc = command "sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir ${DEPLOYDIR} --targetusername UAT --testlevel ${TEST_LEVEL}"
+
+		//    if (rc != 0) {
+
+		//        error 'Salesforce deploy failed.'
+
+		//    }
+
+		//}
+
+	    }
+
+	}
+
+}
+
+ 
+
+def command(script) {
+
+    if (isUnix()) {
+
+        return sh(returnStatus: true, script: script);
+
+    } else {
+
+		return bat(returnStatus: true, script: script);
+
+    }
+
+}
+
 
